@@ -16,7 +16,7 @@ for study_case=(1:9)
     params.CrossMethod = 1;     % Cross Breeding Method
     params.MutatPercent = 40;   % Mutatuon Percentage
     params.MutatNum = round(params.MutatPercent/100*params.PopSize);
-    for k=1:1
+    for k=1:100
         [HPSOM_out(study_case,k),it(k).progress]=HPSOM(problem,params);
     end
     progress(study_case,:)=it;
