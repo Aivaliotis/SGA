@@ -29,7 +29,7 @@ for study_case=[1:9]
         params.ElitNum = params.ElitNum - 1; 
     end
 
-    for k=1:1
+    for k=1:100
         [SGA_out(study_case,k),it(k).progress]=SGA(problem,params);
     end
 
