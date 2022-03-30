@@ -77,10 +77,8 @@ function [GlobalBest,progress]=SGA(problem,params)
             [~,Index1]=sort(individual(ParIndex(1)).Position,'descend');
             [~,Index2]=sort(individual(ParIndex(2)).Position,'descend'); 
             
-            %new_individuals(i).Position = a.*individual(ParIndex(1)).Position + (1-a).*individual(ParIndex(2)).Position;
             new_individuals(i).Velocity= 0*(a.*individual(ParIndex(1)).Velocity + (1-a).*individual(ParIndex(2)).Velocity);
             Index=unique([Index1(1:round(a)*nVar) Index2],'stable');
-            %new_individuals(i).Position=[individual(ParIndex(1)).Position(Index(1:round(a)*nVar)) individual(ParIndex(2)).Position(Index(round(a)*nVar+1:nVar))];
             new_individuals(i).Position(Index)=sort(individual(ParIndex(1)).Position,'descend');
             
               
@@ -106,21 +104,15 @@ function [GlobalBest,progress]=SGA(problem,params)
             [~,Index1]=sort(individual(ParIndex(1)).Position,'descend');
             [~,Index2]=sort(individual(ParIndex(2)).Position,'descend'); 
             Index=unique([Index1(1:round(a)*nVar) Index2],'stable');
-            %new_individuals(i+ElitNum).Position = individual(ParIndex(1)).Position;
-            %new_individuals(i+ElitNum).Position=[individual(ParIndex(1)).Position(Index(1:round(a)*nVar)) individual(ParIndex(2)).Position(Index(round(a)*nVar+1:nVar))];
+            
             new_individuals(i+ElitNum).Position(Index)=sort(individual(ParIndex(1)).Position,'descend');
             
-            
-            %new_individuals(i+ElitNum).Position = a.*individual(ParIndex(1)).Position + (1-a).*individual(ParIndex(2)).Position;
             new_individuals(i+ElitNum).Velocity= 0*(a.*individual(ParIndex(1)).Velocity + (1-a).*individual(ParIndex(2)).Velocity);
             
-            %new_individuals(i+ElitNum).Position=[individual(ParIndex(1)).Position(Index(1:round(a)*nVar)) individual(ParIndex(2)).Position(Index(round(a)*nVar+1:nVar))];
-            %new_individuals(i+ElitNum).Position(Index)=sort(individual(ParIndex(1)).Position,'ascend');
             
             new_individuals(i+ElitNum).Best.Position = new_individuals(i+ElitNum).Position;
             new_individuals(i+ElitNum).Best.Value = minimize*inf;
             
-            %
             if minimize*individual(ParIndex(1)).Best.Value<minimize*individual(ParIndex(2)).Best.Value
                 new_individuals(i+ElitNum).Best.Position = individual(ParIndex(1)).Best.Position;
                 new_individuals(i+ElitNum).Best.Value = individual(ParIndex(1)).Best.Value;
@@ -128,7 +120,7 @@ function [GlobalBest,progress]=SGA(problem,params)
                 new_individuals(i+ElitNum).Best.Position = individual(ParIndex(2)).Best.Position;
                 new_individuals(i+ElitNum).Best.Value = individual(ParIndex(2)).Best.Value; 
             end
-            %}
+            
         end
 
         %% Mutation
@@ -140,11 +132,10 @@ function [GlobalBest,progress]=SGA(problem,params)
             new_individuals(i+CrossNum+ElitNum).Position = individual(MutatIndex(i)).Position;
             new_individuals(i+CrossNum+ElitNum).Position(mutPoint(1))= new_individuals(i+CrossNum+ElitNum).Position(mutPoint(2));
             new_individuals(i+CrossNum+ElitNum).Position(mutPoint(2))= temp;
-            %new_individuals(i+CrossNum+ElitNum).Position = [individual(MutatIndex(i)).Position(1:mutPoint(1)) individual(MutatIndex(i)).Position(mutPoint(2):nVar) individual(MutatIndex(i)).Position(mutPoint(1)+1:mutPoint(2)-1)];
-            %new_individuals(i+CrossNum+ElitNum).Position = -individual(MutatIndex(i)).Position+(2*rand(1,nVar)-1)*0.2*(VarMax-VarMin);
+            
             new_individuals(i+CrossNum+ElitNum).Velocity= 0*ones(1,nVar)*MinVelocity+rand(1,nVar)*(MaxVelocity-MinVelocity);
-            new_individuals(i+CrossNum+ElitNum).Best.Position = new_individuals(i+CrossNum+ElitNum).Position;%individual(MutatIndex(i)).Best.Position;
-            new_individuals(i+CrossNum+ElitNum).Best.Value = minimize*inf;%individual(MutatIndex(i)).Best.Value; 
+            new_individuals(i+CrossNum+ElitNum).Best.Position = new_individuals(i+CrossNum+ElitNum).Position;
+            new_individuals(i+CrossNum+ElitNum).Best.Value = minimize*inf;
         end
        
         %% New Population
@@ -209,7 +200,6 @@ function [GlobalBest,progress]=SGA(problem,params)
         
                 individual(ParticleIndexes(i)).Value = problem.function(Index,problem.TSP_EdgeWeight);
 
-                %individual(ParticleIndexes(i)).Value = problem.function(individual(ParticleIndexes(i)).Position,problem.TSP_EdgeWeight);
                 if minimize*individual(ParticleIndexes(i)).Value<minimize*best_value(it)
                     best_value(it)=individual(ParticleIndexes(i)).Value;
                 end
@@ -233,12 +223,9 @@ function [GlobalBest,progress]=SGA(problem,params)
             
             % Damping Inertia Coefficient
             w=params.w-(params.w-params.wmin)*it/MaxIt;
-            if it>1&&(floor(it*nPop/PopSize)~=floor((it-1)*nPop/PopSize))
-               %w = params.w -(params.w-params.wmin)*(floor(interaction+(it*nPop/PopSize)))/MaxInteractions;
-            end
-            if params.ShowIterInfo&&(floor(it*nPop/PopSize)~=floor((it-1)*nPop/PopSize))%(floor(it*nPop/PopSize)~=floor((it-1)*nPop/PopSize))%params.ShowIterInfo&&(floor(it*nPop/PopSize)~=floor((it-1)*nPop/PopSize))
+            if params.ShowIterInfo&&(floor(it*nPop/PopSize)~=floor((it-1)*nPop/PopSize))
                 disp(['Iteration :' num2str(floor(interaction+it*nPop/PopSize)) ' Value  = ' num2str(GlobalBest.Value) ' Best_value_it = ' num2str(best_value(it)) ' w = ' num2str(w)]);
-                %disp(['Iteration :' num2str(interaction+floor(it*nPop/PopSize)) ' Value  = ' num2str(GlobalBest.Value) ]);
+                
             end
             progress(floor(interaction+(it*nPop/PopSize)),2)=GlobalBest.Value;
             progress(floor(interaction+(it*nPop/PopSize)),1)=cputime-time;
@@ -251,7 +238,7 @@ function [GlobalBest,progress]=SGA(problem,params)
         progress(floor(interaction),2)=GlobalBest.Value;
         progress(floor(interaction),1)=cputime-time;
        
-        if 0%params.ShowIterInfo
+        if params.ShowIterInfo
             disp(['Iteration :' num2str(floor(interaction)) ' Value  = ' num2str(GlobalBest.Value)]);
         end
         

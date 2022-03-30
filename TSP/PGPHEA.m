@@ -18,7 +18,6 @@ function [GlobalBest,progress]=PGPHEA(problem,params)
     MaxIt = params.MaxIt;   % Maximum Number of Iterations
     nPop = params.nPop;     % Population Size (Swarm Size)
     w = params.w;           % Intertia Coefficient
-    %wdamp = params.wdamp;   % Damping Ratio of Inertia Coefficient
     c1 = params.c1;         % Personal Acceleration Coefficient
     c2 = params.c2;         % Social Acceleration Coefficient
     

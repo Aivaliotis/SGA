@@ -137,7 +137,7 @@ function [GlobalBest,progress]=HPSOM(problem,params)
         % Display Interaction Information
         progress(round(it),2)=BestValue(round(it));
         progress(round(it),1)=cputime-time;
-        if MaxInteractions==0&&params.ShowIterInfo
+        if params.ShowIterInfo
             disp(['Iteration :' num2str(round(it)) ' Value  = ' num2str(BestValue(round(it)))]);
         end
 
