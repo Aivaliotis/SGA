@@ -32,7 +32,7 @@ for study_case=(1:9)
     params.nPop = 20;             % Particle Population Size (Swarm Size) / (Choose 0 for pure GA)
     params.PopSize = 20;          % Individual Population Size (GA Size)  / (PopSize=nPop and MaxInteractions=0 for PSO)
     params.GAstep = 1;
-    for k=1:1
+    for k=1:100
     [PSO_out(study_case,k),it(k).progress]=SGA(problem,params);
     end
 progress(study_case,:)=it;
