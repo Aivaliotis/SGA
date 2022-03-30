@@ -20,7 +20,7 @@ for study_case=(1:9)
     params.EarlyExit = 0;
     params.MutatNum = round(params.MutatPercent/100*params.PopSize);
     params.ElitNum = params.PopSize - params.CrossNum - params.MutatNum;
-    for k=1:1
+    for k=1:100
         [PGPHEA_out(study_case,k),it(k).progress]=PGPHEA(problem,params);
     end
     progress(study_case,:)=it;
